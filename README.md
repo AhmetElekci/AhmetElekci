@@ -1,11 +1,53 @@
-- 👋 Hi, I’m @AhmetElekci
-- 👀 I’m interested in ...java
-- 🌱 I’m currently learningjava pyhton 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
 
-- 💞️ I’m looking to collaborate on ...pyhton
-- 📫 How to reach me ...
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-<!---a
-AhmetElekci/AhmetElekci is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-You can click the Preview link to take a look at your changes.
+        System.out.print("NAME SURNAME: ");
+        String adSoyad = scanner.nextLine();
 
+        System.out.print("ENTER YOUR AGE: ");
+        int yas = scanner.nextInt();
+
+        if (yas < 18) {
+            System.out.println("You are Under 18 Years Old, You Cannot Enter the Bar.");
+        } else {
+            System.out.println("You are Over 18 Years Old, You Can Enter the Bar.");
+            try {
+
+                Connection connection = DriverManager.getConnection("jdbc:sqlite:test.db");
+
+
+                String createTableSQL = "CREATE TABLE IF NOT EXISTS kisiler (adsoyad TEXT, yas INT)";
+
+
+                connection.createStatement().execute(createTableSQL);
+
+
+                String insertDataSQL = "INSERT INTO kisiler (adsoyad, yas) VALUES (?, ?)";
+
+
+                PreparedStatement preparedStatement = connection.prepareStatement(insertDataSQL);
+
+
+                preparedStatement.setString(1, adSoyad);
+                preparedStatement.setInt(2, yas);
+
+
+                preparedStatement.executeUpdate();
+
+
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        scanner.close();
+    }
+}
