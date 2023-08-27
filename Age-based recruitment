@@ -50,4 +50,39 @@ public class Main {
 
         scanner.close();
     }
+
+
+
+
+
+
+
+
+
+
+
+}
+@RestController
+@RequestMapping("/api")
+public class AgeCheckPresenter {
+
+    private final PersonRepository personRepository;
+
+    public AgeCheckPresenter(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
+
+    @GetMapping("/age-check")
+    public ResponseEntity<String> checkAge(@RequestParam("age") int age) {
+        Person person = new Person();
+        person.setAge(age);
+
+        if (person.getAge() >= 18) {
+            personRepository.save(person);
+            return ResponseEntity.ok("Big");
+        } else {
+            personRepository.save(person);
+            return ResponseEntity.ok("Small");
+        }
+    }
 }
